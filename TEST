@@ -1,0 +1,97 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const sampleAdventures = [
+  {
+    id: 1,
+    title: "Investigators Needed!",
+    summary: "Monks at Ashford Abbey have mysteriously disappeared overnight, leaving behind cryptic symbols.",
+    details: "The monks of Ashford Abbey are gone. Not a trace left, save for strange symbols scrawled across the walls. No blood, no struggle—just silence. The townsfolk are terrified, whispering that something beneath the Abbey has awakened. If you’ve got the courage to step inside and find out what happened, I’ll pay 300 gp for answers, 500 gp if you solve the mystery."
+  },
+  {
+    id: 2,
+    title: "Help Needed: Deliver Medicine to a Remote Village",
+    summary: "Urgent! Need fast riders or couriers to bring medicine to the sick.",
+    details: "The village of Frosthaven is deep in the mountains and has been hit by a winter fever. I have the medicine they need, but I lack anyone swift enough to get it there before the sickness spreads further. You’ll need to brave the cold and whatever else lurks in the wilds. Payment is 250 gp. If you make it in time, the village elders may offer an additional reward."
+  },
+  {
+    id: 3,
+    title: "BEWARE: The Beast of Shadowmere",
+    summary: "A monstrous creature has been attacking farmers near Shadowmere, leaving nothing but destruction.",
+    details: "We’ve lost cattle, horses, and two shepherds in the last fortnight. The creature strikes at night, and those who see it never return. The elder swears it’s an ancient horror come back to haunt us. We need fighters—real ones—to track it and put it down before it comes for the rest of us. Payment is 500 gp for its head."
+  },
+  {
+    id: 4,
+    title: "Wanted: Caravan Guards for the Whispering Road",
+    summary: "The Whispering Road has become treacherous, with travelers vanishing without a trace.",
+    details: "Merchants are in dire need of armed escorts to ensure safe passage along the Whispering Road. Strange whispers plague those who travel alone, and wagons have been found abandoned, their goods untouched. A payment of 100 gp per guard, plus a share of any recovered goods, will be provided upon safe arrival."
+  },
+  {
+    id: 5,
+    title: "Help Wanted: Something in the Well",
+    summary: "Strange noises coming from the village well. Need it checked.",
+    details: "Folks say they hear crying from inside the well at night. Sent a farmhand to look—he hasn’t come back. I don’t know if it’s spirits, a beast, or just a lost fool, but I need it handled. I’ll pay 100 gp to whoever sorts it out."
+  },
+  {
+    id: 6,
+    title: "Rats in My Cellar – Again",
+    summary: "Big rats. Mean rats. Need ‘em gone.",
+    details: "Had this problem before, but these ones are different—red eyes, thick hides, aggressive as hell. Nearly took a chunk out of my cook. Clear them out and I’ll pay 30 gp, plus a week’s worth of ale for the trouble."
+  },
+  {
+    id: 7,
+    title: "Exorcists Needed: Old Tollhouse is Haunted",
+    summary: "People crossing Briar Bridge say they’re seeing things.",
+    details: "Travelers report a gaunt man at the tollhouse demanding payment in blood and bone. Guards refuse to patrol near it. I don’t care if it’s a ghost or some lunatic, just make it stop. Payment is 200 gp."
+  },
+  {
+    id: 8,
+    title: "Seeking Experienced Hunters for Dangerous Game",
+    summary: "A large predator is killing livestock and hunters in the Mistwood.",
+    details: "Lost three good men trying to track this thing. Don’t know if it’s a bear, a manticore, or worse. I’ll pay 500 gp for its head, and the pelt is yours to sell. Bring proof to the Greenthorn Hunters’ Lodge."
+  }
+];
+
+export default function JobBoard() {
+  const [availableAdventures, setAvailableAdventures] = useState(sampleAdventures.slice(0, 6));
+  const [selectedAdventure, setSelectedAdventure] = useState(null);
+
+  const refreshBoard = () => {
+    const shuffled = [...sampleAdventures].sort(() => 0.5 - Math.random());
+    setAvailableAdventures(shuffled.slice(0, 6));
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6 relative">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-4xl font-bold text-white">Bjergen's Job Board</h1>
+        <Button className="text-white bg-blue-600 hover:bg-blue-700" onClick={refreshBoard}>Refresh</Button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {availableAdventures.map((adventure) => (
+          <motion.div key={adventure.id} whileHover={{ scale: 1.05 }}>
+            <Card className="bg-gray-800 p-4 cursor-pointer hover:bg-gray-700 relative" onClick={() => setSelectedAdventure(adventure)}>
+              <CardContent className="relative text-white">
+                <h2 className="text-xl font-semibold text-white">{adventure.title}</h2>
+                <p className="text-gray-100 mt-2">{adventure.summary}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+      {selectedAdventure && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
+          <div className="bg-gray-800 p-6 rounded-lg max-w-lg w-full text-white">
+            <h2 className="text-2xl font-bold text-white">{selectedAdventure.title}</h2>
+            <p className="mt-4 text-gray-100">{selectedAdventure.details}</p>
+            <div className="flex gap-4 mt-6">
+              <Button className="text-white" onClick={() => setSelectedAdventure(null)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
